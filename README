@@ -1,3 +1,9 @@
+* Note! This module uses Regexp::Grammars. In some circumstances,
+* Regexp::Grammars triggers a segfault bug in perl. (I've seen it
+* on 5.14.)
+*
+* https://rt.cpan.org/Public/Bug/Display.html?id=60109
+
 Parse::M3U::Extended - a simple Regexp::Grammars based M3UE parser
 
 This module contains a simple parser for the Extended M3U format as used
