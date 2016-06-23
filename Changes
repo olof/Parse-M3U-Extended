@@ -1,3 +1,12 @@
+Parse::M3U::Extended 0.3, 2016-06-23
+
+ * Fix compile time problem with Perl prior to 5.22, caused by
+   some precedence issue, resulting in errors like "Type of arg
+   1 to shift must be array". Thanks to multiple cpantesters.org
+   contributors.
+
+-- Olof Johansson <olof@cpan.org>
+
 Parse::M3U::Extended 0.2, 2016-06-23
 
  * Rewrite and remove dependency on Regexp::Grammars. Any API

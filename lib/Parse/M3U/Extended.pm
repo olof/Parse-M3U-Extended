@@ -2,7 +2,7 @@ package Parse::M3U::Extended;
 use warnings;
 use strict;
 
-our $VERSION = 0.2;
+our $VERSION = 0.3;
 
 require Exporter;
 our @ISA = 'Exporter';
@@ -13,7 +13,7 @@ our @EXPORT_OK = qw(m3u_parser $m3u_parser);
 Parse::M3U::Extended - Extended M3U playlist parser
 
 =head1 SYNOPSIS
- 
+
  use LWP::Simple;
  use Parse::M3U::Extended qw(m3u_parser);
 
