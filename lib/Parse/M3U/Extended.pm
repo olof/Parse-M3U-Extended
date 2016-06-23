@@ -2,7 +2,7 @@ package Parse::M3U::Extended;
 use warnings;
 use strict;
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 require Exporter;
 our @ISA = 'Exporter';
@@ -10,7 +10,7 @@ our @EXPORT_OK = qw(m3u_parser $m3u_parser);
 
 =head1 NAME
 
-Parse::M3U::Extended - a simple Regexp::Grammars based M3UE parser
+Parse::M3U::Extended - Extended M3U playlist parser
 
 =head1 SYNOPSIS
  
@@ -22,9 +22,10 @@ Parse::M3U::Extended - a simple Regexp::Grammars based M3UE parser
 
 =head1 DESCRIPTION
 
-This module contains a simple parser for the Extended M3U format
-as used in e.g. HTTP Live Streaming. It also supports the regular
-M3U format, usually found with digital copies of music albums etc.
+This module contains a simple parser for the Extended M3U
+playlist format as used in e.g. HTTP Live Streaming. It also
+supports the regular M3U format, usually found with digital
+copies of music albums etc.
 
 =cut
 
@@ -105,16 +106,14 @@ sub m3u_parser {
 
 =item * IETF Internet Draft: draft-pantos-http-live-streaming-08
 
-=item * L<Regexp::Grammars>
-
 =back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2012 - Olof Johansson <olof@cpan.org>
+Copyright (c) 2012, 2016 - Olof Johansson <olof@cpan.org>
 All rights reserved.
 
-This program is free software; you can redistribute it and/or 
+This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 =cut

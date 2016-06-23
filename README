@@ -1,10 +1,4 @@
-* Note! This module uses Regexp::Grammars. In some circumstances,
-* Regexp::Grammars triggers a segfault bug in perl. (I've seen it
-* on 5.14.)
-*
-* https://rt.cpan.org/Public/Bug/Display.html?id=60109
-
-Parse::M3U::Extended - a simple Regexp::Grammars based M3UE parser
+Parse::M3U::Extended - M3UE parser
 
 This module contains a simple parser for the Extended M3U format as used
 in e.g. HTTP Live Streaming. It also supports the regular M3U format,
@@ -17,7 +11,7 @@ Installation:
  perl Makefile.PL
  make install
 
-Copyright (c) 2012 - Olof Johansson <olof@cpan.org>
+Copyright (c) 2012, 2016 - Olof Johansson <olof@cpan.org>
 All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
