@@ -1,7 +1,6 @@
 package Parse::M3U::Extended;
 use warnings;
 use strict;
-use Regexp::Grammars;
 
 our $VERSION = 0.1;
 
@@ -28,31 +27,6 @@ as used in e.g. HTTP Live Streaming. It also supports the regular
 M3U format, usually found with digital copies of music albums etc.
 
 =cut
-
-my $m3u_parser = qr{
-	<[Line]>+
-
-	##############
-	<nocontext:>
-
-	<token: Line>
-		(?: <Item> | <Directive> | <Comment> ) \n
-
-	<token: Directive>
-		<Tag> (?: : (<Value>))?
-
-	<token: Tag>
-		\# <MATCH= (EXT[^:\n]+)>
-
-	<token: Item>
-		[^\#\n] [^\n]*
-
-	<token: Comment>
-		\# <MATCH= ([^\n]+)>
-
-	<token: Value>
-		[^\n]+
-}xm;
 
 =head1 SUBROUTINES
 
@@ -85,71 +59,44 @@ and the value key is optional.
    value => 'YES',
  }
 
-Internally, it's using Regexp::Grammars, and the returned result
-hash is then flattned. If you want to work with the result hash,
-you can use $Parse::M3U::Extended::parser directly, but
-documenting its structure is outside the scope of this manual.
-Please refer to L<Regexp::Grammars>.
-
-If the playlist supplied does not match an M3U file, undef is
-returned.
-
 =cut
 
-sub m3u_parser {
-	my $playlist = shift;
-
-	if ($playlist =~ /$m3u_parser/) {
-		return __analyze(\%/);
-	}
+sub _simple {
+	my $type = shift;
+	my $key = shift // 'value';
+	return sub {{
+		type => $type,
+		$key => pop,
+	}};
 }
 
-# The analyze subroutine are used to flatten the structured returned
-# from Regexp::Grammars. If you want the full tree, you can use 
-# $Parse::M3U::Extended::parser directly.
-sub __analyze {
-	my $res = shift;
-	my $ext = 0;
-	my @ret;
+my @_tests = (
+	['marker', qr/^#\s*(EXTM3U)\s*$/, _simple('directive', 'tag')],
+	['directive', qr/^#\s*(EXT[^:]+)(?::(.+))?\s*/, sub {
+	shift ? {
+			type => 'directive',
+			tag => $_[0],
+			(defined $_[1] ? (value => $_[1]) : ())
+		} : _simple('comment')->($_[0] . (defined $_[1] && ":$_[1]"))
+	}],
+	['comment', qr/^#(.*)/, _simple('comment')],
+	['item', qr/(.+)/x, _simple('item')],
+);
 
-	# If the first line is #EXTM3U, then it's an M3UE
-	if (exists $res->{Line}->[0]->{Directive} and
-	    $res->{Line}->[0]->{Directive}->{Tag} eq 'EXTM3U') {
-	    	$ext = 1;
+
+sub m3u_parser {
+	my @lines = split /\r?\n/, shift;
+	my @playlist;
+	my $m3ue = $lines[0] =~ /^#EXTM3U/;
+	for my $l (@lines) {
+		my @match = grep { defined $_->[2] }
+		            map { [$_->[0], $_->[2], $l =~ /$_->[1]/] }
+			    @_tests;
+		my ($type, $func, @vals) = @{shift @match};
+		push @playlist, $func->($m3ue, @vals);
 	}
 
-	for my $line (@{$res->{Line}}) {
-		if (exists $line->{Directive} and !$ext) {
-			my $dir = $line->{Directive};
-
-			push @ret, {
-				type => 'comment',
-				value => "$dir->{Tag}:$dir->{Value}",
-			};
-		} elsif (exists $line->{Directive}) {
-			my $dir = $line->{Directive};
-
-			push @ret, {
-				type => 'directive',
-				tag => $dir->{Tag},
-				exists $dir->{Value} ?
-					(value => $dir->{Value}) :
-					()
-			};
-		} elsif (exists $line->{Comment}) {
-			push @ret, {
-				type => 'comment',
-				value => $line->{Comment}
-			};
-		} else {
-			push @ret, {
-				type => 'item',
-				value => $line->{Item}
-			};
-		}
-	}
-
-	return @ret;
+	return @playlist;
 }
 
 =head1 SEE ALSO

@@ -13,7 +13,6 @@ WriteMakefile (
 	MIN_PERL_VERSION => '5.10.0',
 
 	PREREQ_PM => {
-		'Regexp::Grammars' => 0,
 		'JSON' => 0, # build (...test) dependency
 	},
 );
