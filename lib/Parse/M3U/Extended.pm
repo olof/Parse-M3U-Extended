@@ -74,7 +74,7 @@ sub _simple {
 my @_tests = (
 	['marker', qr/^#\s*(EXTM3U)\s*$/, _simple('directive', 'tag')],
 	['directive', qr/^#\s*(EXT[^:]+)(?::(.+))?\s*/, sub {
-	shift ? {
+	shift() ? {
 			type => 'directive',
 			tag => $_[0],
 			(defined $_[1] ? (value => $_[1]) : ())
