@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+my $github = 'https://github.com/olof/Parse-M3U-Extended';
+
 WriteMakefile (
 	NAME => 'Parse::M3U::Extended',
 	AUTHOR => 'Olof Johansson <olof@cpan.org>',
@@ -15,5 +17,11 @@ WriteMakefile (
 	PREREQ_PM => {
 		'JSON' => 0, # build (...test) dependency
 	},
-);
 
+	META_MERGE => {
+		resources => {
+			bugtracker => "$github/issues",
+			repository => $github,
+		},
+	},
+);
